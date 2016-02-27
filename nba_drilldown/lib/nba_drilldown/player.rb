@@ -25,8 +25,11 @@ class NbaDrilldown::Player
 
   def add_player_info
     doc = Nokogiri::HTML(open(self.url))
-    binding.pry
-    #add number,position,experience, height
+    
+      self.number = doc.search("ul.general-info li").first.text.match(/\d+/)
+      self.position = doc.search("ul.general-info li").first.text.match(/[A-Z]+/)
+        
+   
 
   end
 
