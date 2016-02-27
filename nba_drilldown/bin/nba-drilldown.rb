@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
 require "bundler/setup"
-require "nba-drilldowndown"
+require "nba_drilldown"
 
 NbaDrilldown::CLI.new.call
