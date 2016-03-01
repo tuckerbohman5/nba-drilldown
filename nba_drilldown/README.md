@@ -22,7 +22,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+  After installation of gem. Type nba-drilldown in the prompt and enjoy the app. 
 
 ## Development
 

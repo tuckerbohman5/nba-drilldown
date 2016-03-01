@@ -1,12 +1,10 @@
 class NbaDrilldown::Team
-  attr_accessor :name, :conference, :players, :url
+  attr_accessor :name, :conference, :players, :url, :record, :roster_url
 
   @@all = []
 
   def initialize
     @players = []
-
-
   end
 
 
@@ -16,8 +14,15 @@ class NbaDrilldown::Team
       new_team = NbaDrilldown::Team.new
       new_team.name = team.text
       new_team.url = team["href"]
+      new_team.add_record_to_team
       @@all << new_team
     end
+
+  end
+
+  def add_record_to_team
+    doc = Nokogiri::HTML(open(self.url))
+    self.record = doc.search("li.record").first.text
 
   end
 
@@ -34,8 +39,9 @@ class NbaDrilldown::Team
   end
 
   def self.list_teams
+      puts "Team Name --- Team Record"
     @@all.each_with_index do |team, index|
-      puts "#{index + 1}. #{team.name}"
+      puts "#{index + 1}. #{team.name} --- #{team.record}"
     end
   end
 
@@ -43,28 +49,11 @@ class NbaDrilldown::Team
     @@all
   end
 
-  #def self.create_players_from_team_url
-    #self.all.each do |team|
-      
-     # team.url = team.format_team_url
-      
-     # doc = Nokogiri::HTML(open(team.url))
-     # doc.search("td.sortcell a").each do |player|
-     # new_player = NbaDrilldown::Player.create_from_data(player)
-      
-     # new_player.add_player_info
-     # new_player.team = self
-      
-      #team.players << new_player
-      #end
-    #end
-      
-  #end
 
   def create_players_from_team
-    self.url = self.format_team_url
+    self.roster_url = self.format_team_url
       
-      doc = Nokogiri::HTML(open(self.url))
+      doc = Nokogiri::HTML(open(self.roster_url))
       doc.search("td.sortcell a").each do |player|
       new_player = NbaDrilldown::Player.create_from_data(player)
       
@@ -75,8 +64,6 @@ class NbaDrilldown::Team
       end
 
   end
-
-
 
   def format_team_url
     split_array = self.url.split("/")
